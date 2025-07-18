@@ -15,20 +15,43 @@ document.addEventListener('DOMContentLoaded', function() {
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
-    function sendMessage() {
-        const text = userInput.value.trim();
-        if (!text) return;
-        appendMessage(text, 'user');
-        userInput.value = '';
-        setTimeout(() => {
-            appendMessage('Hello! I am a simple chatbot. How can I help you?', 'bot');
-        }, 500);
+    // Add this function to send messages to backend
+    async function sendMessageToBackend(message) {
+      const response = await fetch('http://localhost:3001/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: 'demo-user', message })
+      });
+      const data = await response.json();
+      return data.response;
     }
 
-    sendBtn.addEventListener('click', sendMessage);
+    // For demonstration, let's assume you have a function handleUserInput
+    async function handleUserInput(message) {
+      // Display user message in UI (existing logic)
+      appendMessage(message, 'user');
+
+      // Get AI response from backend
+      const aiResponse = await sendMessageToBackend(message);
+
+      // Display AI response in UI (existing logic)
+      appendMessage(aiResponse, 'bot');
+    }
+
+    sendBtn.addEventListener('click', function() {
+        const message = userInput.value.trim();
+        if (message) {
+            handleUserInput(message);
+            userInput.value = '';
+        }
+    });
     userInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
-            sendMessage();
+            const message = userInput.value.trim();
+            if (message) {
+                handleUserInput(message);
+                userInput.value = '';
+            }
         }
     });
 }); 

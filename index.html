@@ -4,15 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Web Chatbot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="chatbot-container">
-        <div class="chatbot-header">Chat bot</div>
+    <div class="background-gradient"></div>
+    <div class="chatbot-container glass-effect">
+        <div class="chatbot-header">
+            <span class="chatbot-title">AI Assistant</span>
+            <span class="chatbot-version">(ChatGPT version: gpt-4.1-nano)</span>
+        </div>
         <div id="chat-window" class="chat-window"></div>
         <div class="input-area">
             <input type="text" id="user-input" placeholder="Type your message...">
-            <button id="send-btn">Send</button>
+            <button id="send-btn"><span class="send-icon">➤</span></button>
         </div>
     </div>
     <div class="chatbot-credit">created by Khanh Nguyen</div>
