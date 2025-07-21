@@ -6,9 +6,13 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
 // Load environment variables from .env file
 dotenv.config();
+
+// Khởi tạo Supabase client
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 const app = express();
 const port = 3001;
@@ -44,6 +48,26 @@ app.post('/api/chat', async (req, res) => {
       }
     );
     const aiMessage = response.data.choices[0].message.content;
+
+    // Lưu lịch sử chat vào Supabase
+    console.log('[Supabase] Chuẩn bị insert vào bảng conversation:', {
+      conversation_id: userId,
+      mesages: [{ user: message, ai: aiMessage }],
+      created_at: new Date().toISOString()
+    });
+    const { data, error: supabaseError } = await supabase.from('conversation').insert([
+      {
+        conversation_id: userId,
+        mesages: [{ user: message, ai: aiMessage }],
+        created_at: new Date().toISOString()
+      }
+    ]);
+    if (supabaseError) {
+      console.error('[Supabase] Lỗi khi insert:', supabaseError);
+    } else {
+      console.log('[Supabase] Insert thành công:', data);
+    }
+
     res.json({ response: aiMessage });
   } catch (error) {
     console.error('OpenAI API error:', error.response?.data || error.message);
