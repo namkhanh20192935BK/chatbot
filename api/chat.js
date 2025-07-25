@@ -1,11 +1,9 @@
-const axios = require('axios');
-const dotenv = require('dotenv');
-const { createClient } = require('@supabase/supabase-js');
+import axios from 'axios';
+import { createClient } from '@supabase/supabase-js';
 
-dotenv.config();
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
@@ -62,4 +60,4 @@ module.exports = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Failed to get response from OpenAI API', response: '' });
   }
-}; 
+} 
