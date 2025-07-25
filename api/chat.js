@@ -14,7 +14,22 @@ module.exports = async (req, res) => {
   if (!userId || !message) {
     return res.status(400).json({ error: 'userId and message are required', response: '' });
   }
-  const contextMessages = [{ role: 'user', content: message }];
+  // Fetch existing messages for this user
+  let history = [];
+  try {
+    const { data, error } = await supabase
+      .from('conversation')
+      .select('messages')
+      .eq('conversation_id', userId)
+      .order('created_at', { ascending: true });
+    if (data && data.length > 0) {
+      history = data.flatMap(row => row.messages || []);
+    }
+  } catch (e) {
+    // Ignore, treat as empty history
+  }
+  // Add the new user message
+  const contextMessages = [...history, { role: 'user', content: message }];
   try {
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',
@@ -30,10 +45,16 @@ module.exports = async (req, res) => {
       }
     );
     const aiMessage = response.data.choices[0].message.content;
+    // Append the assistant's reply
+    const updatedMessages = [...contextMessages, { role: 'assistant', content: aiMessage }];
+    // Store the new message pair as a new row (or update, depending on your schema)
     await supabase.from('conversation').insert([
       {
         conversation_id: userId,
-        mesages: [{ user: message, ai: aiMessage }],
+        messages: [
+          { role: 'user', content: message },
+          { role: 'assistant', content: aiMessage }
+        ],
         created_at: new Date().toISOString()
       }
     ]);
