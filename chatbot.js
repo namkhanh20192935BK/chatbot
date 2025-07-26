@@ -1,4 +1,4 @@
-// Bỏ import ES module, dùng window.supabase từ CDN
+ // Bỏ import ES module, dùng window.supabase từ CDN
 
 document.addEventListener('DOMContentLoaded', function() {
     const chatWindow = document.getElementById('chat-window');
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add this function to send messages to backend
     async function sendMessageToBackend(message) {
-      const response = await fetch('/api/chat', {
+      const response = await fetch(window.API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: 'demo-user', message })

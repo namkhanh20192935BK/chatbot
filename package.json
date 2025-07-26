@@ -4,10 +4,13 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "node server.js",
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "deploy": "vercel --prod"
   },
   "engines": {
-    "node": "22.x"
+    "node": "18.x"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.52.0",

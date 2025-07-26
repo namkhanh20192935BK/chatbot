@@ -1,4 +1,4 @@
-// server.js
+ // server.js
 import express from 'express';
 import bodyParser from 'body-parser';
 import axios from 'axios';
@@ -60,17 +60,18 @@ app.post('/api/chat', async (req, res) => {
       mesages: [{ user: message, ai: aiMessage }],
       created_at: new Date().toISOString()
     });
-    const { data, error: supabaseError } = await supabase.from('conversation').insert([
+    const data_insert = [
       {
         conversation_id: userId,
         mesages: [{ user: message, ai: aiMessage }],
         created_at: new Date().toISOString()
       }
-    ]);
+    ]
+    const { data, error: supabaseError } = await supabase.from('conversation').insert(data_insert);
     if (supabaseError) {
       console.error('[Supabase] Lỗi khi insert:', supabaseError);
     } else {
-      console.log('[Supabase] Insert thành công:', data);
+      console.log('[Supabase] Insert thành công:', JSON.stringify(data_insert, null, 2));
     }
 
     res.json({ response: aiMessage });
