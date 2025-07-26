@@ -1,9 +1,30 @@
- // Bỏ import ES module, dùng window.supabase từ CDN
-
 document.addEventListener('DOMContentLoaded', function() {
     const chatWindow = document.getElementById('chat-window');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
+
+    // Check if user is logged in
+    const currentUser = localStorage.getItem('chatbot_username');
+    if (!currentUser) {
+        // Redirect to login page if not logged in
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Update user header to show current user
+    updateUserHeader(currentUser);
+
+    function updateUserHeader(username) {
+        const userHeader = document.getElementById('user-header');
+        if (userHeader) {
+            userHeader.innerHTML = `
+                <div class="user-info">
+                    <span class="current-user">Welcome, ${username}!</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            `;
+        }
+    }
 
     function appendMessage(text, sender) {
         const msgDiv = document.createElement('div');
@@ -22,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const response = await fetch(window.API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: 'demo-user', message })
+        body: JSON.stringify({ userId: currentUser, message })
       });
       const data = await response.json();
       return data.response;
@@ -56,4 +77,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-}); 
+});
+
+// Global logout function
+function logout() {
+    localStorage.removeItem('chatbot_username');
+    window.location.href = 'login.html';
+} 

@@ -11,10 +11,17 @@
 </head>
 <body>
     <div class="background-gradient"></div>
+    
+    <!-- User Header - Fixed at top right -->
+    <div class="user-header" id="user-header">
+        <!-- User info will be inserted here by JavaScript -->
+    </div>
+    
+    <!-- Main Chat Container -->
     <div class="chatbot-container glass-effect">
         <div class="chatbot-header">
             <span class="chatbot-title">AI Assistant</span>
-            <span class="chatbot-version">(ChatGPT version: gpt-4.1-nano)</span>
+            <span class="chatbot-version">(ChatGPT version: gpt-4o-mini)</span>
         </div>
         <div id="chat-window" class="chat-window"></div>
         <div class="input-area">
@@ -24,7 +31,7 @@
     </div>
     <div class="chatbot-credit">created by Khanh Nguyen</div>
     <script>
-      window.API_URL = 'http://localhost:3001/api/chat'; // TODO: Đọc từ .env nếu build tool, còn hiện tại sửa tay ở đây
+      window.API_URL = '/api/chat'; // TODO: Đọc từ .env nếu build tool, còn hiện tại sửa tay ở đây
     </script>
     <script src="chatbot.js"></script>
 </body>
